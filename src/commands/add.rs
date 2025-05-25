@@ -51,9 +51,7 @@ pub fn handle_add(
     no_symbols: bool,
     key_path: Option<String>,
 ) -> Result<()> {
-    let home_dir_str = std::env::var("HOME").map_err(|_| {
-        eyre!("Could not find HOME environment variable. Please ensure one is set.")
-    })?;
+    let home_dir_str = std::env::var("HOME")?;
     let home_dir = PathBuf::from(home_dir_str);
     let (cert, _) = determine_key(&home_dir, key_path)?;
 

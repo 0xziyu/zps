@@ -1,6 +1,8 @@
 use clap::Parser;
 use cli::{Cli, Commands};
-use commands::{add::handle_add, generate::handle_generate, init::handle_init_command};
+use commands::{
+    add::handle_add, generate::handle_generate, init::handle_init_command, show::handle_show,
+};
 use eyre::Result;
 
 mod cli;
@@ -28,7 +30,7 @@ fn main() -> Result<()> {
             handle_add(&path, force, generate, length, no_symbols, cli.key_path)?;
         }
         Commands::Show { path } => {
-            //commands::show::handle_show(&path, clip)?;
+            handle_show(&path, cli.key_path)?;
         }
         Commands::List { subfolder } => {
             //commands::list::handle_list(subfolder.as_deref())?;

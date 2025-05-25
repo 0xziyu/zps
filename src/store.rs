@@ -5,7 +5,6 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use tracing::info;
 
-pub const GPG_ID_FILE_NAME: &str = ".gpg-id";
 pub const PASSWORD_STORE_DIR_NAME: &str = ".password-store";
 pub const CONFIG_DIR_NAME: &str = ".config";
 pub const DEFAULT_KEY_FILE_NAME: &str = "key.pgp";
@@ -15,11 +14,7 @@ pub const DEFAULT_KEY_FILE_NAME: &str = "key.pgp";
 /// If not set, it defaults to `$HOME/.password-store` (or `%USERPROFILE%\.password-store` on Windows).
 pub fn get_password_store_path() -> Result<PathBuf> {
     // Determine home directory based on OS
-    let home_dir_str = if cfg!(windows) {
-        env::var("USERPROFILE")
-    } else {
-        env::var("HOME")
-    };
+    let home_dir_str = env::var("HOME");
 
     match home_dir_str {
         Ok(home) => Ok(PathBuf::from(home).join(PASSWORD_STORE_DIR_NAME)),
