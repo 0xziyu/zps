@@ -5,13 +5,12 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use tracing::info;
 
-pub const PASSWORD_STORE_DIR_NAME: &str = ".password-store";
+pub const PASSWORD_STORE_DIR_NAME: &str = ".zps";
 pub const CONFIG_DIR_NAME: &str = ".config";
 pub const DEFAULT_KEY_FILE_NAME: &str = "key.pgp";
 
 /// Returns the path to the password store directory.
-/// It prioritizes the `PASSWORD_STORE_DIR` environment variable.
-/// If not set, it defaults to `$HOME/.password-store` (or `%USERPROFILE%\.password-store` on Windows).
+/// If not set, it defaults to `$HOME/.zps`.
 pub fn get_password_store_path() -> Result<PathBuf> {
     // Determine home directory based on OS
     let home_dir_str = env::var("HOME");
