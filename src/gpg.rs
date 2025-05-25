@@ -15,12 +15,7 @@ use sequoia_openpgp::{
     serialize::stream::{Armorer, Encryptor, LiteralWriter, Message},
     types::SymmetricAlgorithm,
 };
-use std::{
-    collections::HashMap,
-    io::Write,
-    path::Path,
-    sync::Arc,
-};
+use std::{collections::HashMap, io::Write, path::Path, sync::Arc};
 use tracing::info;
 
 /// Generates a new OpenPGP key with an encryption subkey,
@@ -145,7 +140,7 @@ pub fn decrypt_data(recipient: &Cert, ciphertext: &[u8]) -> Result<Vec<u8>> {
 
 struct Helper {
     secret_keys: HashMap<KeyID, (Cert, Key<SecretParts, UnspecifiedRole>)>,
-    key_identities: HashMap<KeyID, Arc<Cert>>,
+    //key_identities: HashMap<KeyID, Arc<Cert>>,
     password: String,
 }
 
@@ -156,9 +151,9 @@ impl Helper {
         let p = StandardPolicy::new();
 
         let mut keys = HashMap::new();
-        let mut identities = HashMap::new();
+        //let mut identities = HashMap::new();
 
-        let cert = Arc::new(secret.clone());
+        //let cert = Arc::new(secret.clone());
         for ka in secret
             .keys()
             .secret()
@@ -169,14 +164,14 @@ impl Helper {
             let id = ka.key().keyid();
             let key = ka.key();
             keys.insert(id.clone(), (secret.clone(), key.clone()));
-            identities.insert(id.clone(), cert.clone());
+            //identities.insert(id.clone(), cert.clone());
         }
 
         let password = password_cb()?;
 
         Ok(Self {
             secret_keys: keys,
-            key_identities: identities,
+            //key_identities: identities,
             password,
         })
     }

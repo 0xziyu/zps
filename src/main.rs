@@ -1,7 +1,8 @@
 use clap::Parser;
 use cli::{Cli, Commands};
 use commands::{
-    add::handle_add, generate::handle_generate, init::handle_init_command, show::handle_show,
+    add::handle_add, generate::handle_generate, init::handle_init_command, list::handle_list,
+    show::handle_show,
 };
 use eyre::Result;
 
@@ -33,6 +34,7 @@ fn main() -> Result<()> {
             handle_show(&path, cli.key_path)?;
         }
         Commands::List { subfolder } => {
+            handle_list(subfolder.as_deref())?;
             //commands::list::handle_list(subfolder.as_deref())?;
         }
         Commands::Rm { path, recursive } => {
