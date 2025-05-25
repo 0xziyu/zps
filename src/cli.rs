@@ -56,13 +56,13 @@ pub enum Commands {
         subfolder: Option<String>,
     },
     /// Remove a password or folder
-    Rm {
+    Remove {
         /// Path to the password entry or folder
         #[clap(value_name = "PATH")]
         path: String,
 
         /// Remove recursively (required for folders).
-        #[clap(long, short, alias = "force")]
+        #[clap(long, short)]
         recursive: bool,
     },
     /// Generate a new password

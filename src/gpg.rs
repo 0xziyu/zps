@@ -15,7 +15,7 @@ use sequoia_openpgp::{
     serialize::stream::{Armorer, Encryptor, LiteralWriter, Message},
     types::SymmetricAlgorithm,
 };
-use std::{collections::HashMap, io::Write, path::Path, sync::Arc};
+use std::{collections::HashMap, io::Write, path::Path};
 use tracing::info;
 
 /// Generates a new OpenPGP key with an encryption subkey,

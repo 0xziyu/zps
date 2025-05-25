@@ -936,21 +936,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "password-manager"
-version = "0.1.0"
-dependencies = [
- "clap",
- "eyre",
- "rand",
- "rpassword",
- "sequoia-openpgp",
- "termtree",
- "tracing",
- "tracing-subscriber",
- "walkdir",
-]
-
-[[package]]
 name = "petgraph"
 version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1887,4 +1872,19 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "zps"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "eyre",
+ "rand",
+ "rpassword",
+ "sequoia-openpgp",
+ "termtree",
+ "tracing",
+ "tracing-subscriber",
+ "walkdir",
 ]
