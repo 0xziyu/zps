@@ -4,7 +4,8 @@ use std::fs;
 use std::path::PathBuf;
 use tracing::info;
 
-use crate::commands::generate::{DEFAULT_PASSWORD_LENGTH, generate_password_internal};
+use crate::commands::pass::generate::generate_password_internal;
+use crate::constants::DEFAULT_PASSWORD_LENGTH;
 use crate::gpg::encrypt_data;
 use crate::store::{
     ensure_store_directory_exists, get_password_file_path, get_password_store_path,
@@ -43,7 +44,7 @@ fn get_password_content(
     Ok(lines.join("\n"))
 }
 
-pub fn handle_add(
+pub fn handle_pass_add(
     path: &str,
     force: bool,
     generate: bool,

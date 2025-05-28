@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 
-use crate::commands::generate::DEFAULT_PASSWORD_LENGTH;
+use crate::constants::DEFAULT_PASSWORD_LENGTH;
 
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
@@ -20,28 +20,13 @@ pub struct Cli {
 pub enum Commands {
     /// Initialize a new password store
     Init {},
-    /// Add a new password to the store
-    Add {
-        /// Path to the password entry (e.g., "work/email" or "social/twitter.com")
-        #[clap(value_name = "PATH")]
-        path: String,
-
-        /// Overwrite existing password if it exists.
-        #[clap(long, short)]
-        force: bool,
-
-        /// Generate a new password instead of prompting.
-        #[clap(long, short = 'g')] // Added short flag -g
-        generate: bool,
-
-        /// Optional length for the generated password if --generate is used.
-        /// Defaults to the same default as the 'generate' command.
-        #[clap(long, requires = "generate")]
-        length: Option<usize>,
-
-        /// Optional: do not use symbols if --generate is used with --length.
-        #[clap(long, requires = "generate")] // Technically, only requires `generate`
-        no_symbols: bool,
+    Pass {
+        #[clap(subcommand)]
+        command: PassCommands,
+    },
+    Otp {
+        #[clap(subcommand)]
+        command: OtpCommands,
     },
     /// Show (decrypt and print) an existing password
     Show {
@@ -65,6 +50,33 @@ pub enum Commands {
         #[clap(long, short)]
         recursive: bool,
     },
+}
+
+#[derive(Subcommand)]
+pub enum PassCommands {
+    /// Add a new password to the store
+    Add {
+        /// Path to the password entry (e.g., "work/email" or "social/twitter.com")
+        #[clap(value_name = "PATH")]
+        path: String,
+
+        /// Overwrite existing password if it exists.
+        #[clap(long, short)]
+        force: bool,
+
+        /// Generate a new password instead of prompting.
+        #[clap(long, short = 'g')] // Added short flag -g
+        generate: bool,
+
+        /// Optional length for the generated password if --generate is used.
+        /// Defaults to the same default as the 'generate' command.
+        #[clap(long, requires = "generate")]
+        length: Option<usize>,
+
+        /// Optional: do not use symbols if --generate is used with --length.
+        #[clap(long, requires = "generate")] // Technically, only requires `generate`
+        no_symbols: bool,
+    },
     /// Generate a new password
     Generate {
         /// Length of the generated password.
@@ -74,5 +86,24 @@ pub enum Commands {
         /// Exclude symbols from the generated password.
         #[clap(long, short = 'n', alias = "no-symbols")]
         no_symbols: bool,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum OtpCommands {
+    /// Generate current OTP code
+    Generate {
+        /// Path to OTP entry
+        #[clap(value_name = "PATH")]
+        path: String,
+    },
+    /// Add new OTP entry
+    Add {
+        /// Path for new OTP entry
+        #[clap(value_name = "PATH")]
+        path: String,
+        /// Full otpauth URI (e.g., "otpauth://totp/...")
+        #[clap(long, short)]
+        uri: String,
     },
 }
