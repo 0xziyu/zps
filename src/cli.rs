@@ -9,8 +9,8 @@ pub struct Cli {
     #[clap(subcommand)]
     pub command: Commands,
 
-    /// Optional: Path to your PGP secret key file (e.g., ~/.config/your-app/key.pgp).
-    /// If not provided, attempts to use a default key (in ~/.config/pass-rs/default_key.pgp)
+    /// Optional: Path to your PGP secret key file (e.g., ~/.config/key.pgp).
+    /// If not provided, attempts to use a default key (in ~/.config/key.pgp)
     /// or prompts to create one if the default does not exist.
     #[arg(long)]
     pub key_path: Option<String>,
@@ -20,10 +20,12 @@ pub struct Cli {
 pub enum Commands {
     /// Initialize a new password store
     Init {},
+    /// Manage Pass entries
     Pass {
         #[clap(subcommand)]
         command: PassCommands,
     },
+    /// Manage OTP entries
     Otp {
         #[clap(subcommand)]
         command: OtpCommands,
