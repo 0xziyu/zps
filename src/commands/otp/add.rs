@@ -8,6 +8,7 @@ use crate::{
     gpg::encrypt_data,
     store::{ensure_store_directory_exists, get_password_file_path, get_password_store_path},
     utils::determine_key,
+    vcs::jj_commit_changes,
 };
 
 /// Validate and normalize otpauth URI
@@ -45,6 +46,9 @@ pub fn handle_otp_add(path: &str, uri: &str, key_path: Option<String>) -> Result
     std::fs::write(&otp_file_path, encrypted)?;
 
     info!("OTP entry created at {}", path);
+
+    let commit_message = format!("Add OTP for {}", path);
+    jj_commit_changes(&store_path, &commit_message)?;
 
     Ok(())
 }

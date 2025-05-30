@@ -16,6 +16,7 @@ mod constants;
 mod gpg;
 mod store;
 mod utils;
+mod vcs;
 
 fn main() -> Result<()> {
     tracing_subscriber::fmt().init();

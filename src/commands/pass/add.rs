@@ -11,6 +11,7 @@ use crate::store::{
     ensure_store_directory_exists, get_password_file_path, get_password_store_path,
 };
 use crate::utils::determine_key;
+use crate::vcs::jj_commit_changes;
 
 fn get_password_content(
     path_name: &str,
@@ -80,5 +81,9 @@ pub fn handle_pass_add(
     fs::write(&password_file_path, encrypted_data)?;
 
     println!("Password for '{}' added.", path);
+
+    let commit_message = format!("Add password for {}", path);
+    jj_commit_changes(&store_path, &commit_message)?;
+
     Ok(())
 }

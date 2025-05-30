@@ -6,6 +6,7 @@ use tracing::info;
 use crate::{
     store::{ensure_store_directory_exists, get_password_store_path},
     utils::determine_key,
+    vcs::jj_init_repository,
 };
 
 pub fn handle_init_command(key_path_opt: Option<String>) -> Result<()> {
@@ -15,6 +16,8 @@ pub fn handle_init_command(key_path_opt: Option<String>) -> Result<()> {
     let store_path = get_password_store_path()?;
 
     ensure_store_directory_exists(&store_path)?;
+
+    jj_init_repository(&store_path)?;
 
     let (_, used_key_file_path) = determine_key(&home_dir, key_path_opt)?;
 

@@ -1,8 +1,9 @@
 use eyre::{Result, eyre};
 use tracing::info;
 
-use crate::store::{
-    ensure_store_directory_exists, get_password_file_path, get_password_store_path,
+use crate::{
+    store::{ensure_store_directory_exists, get_password_file_path, get_password_store_path},
+    vcs::jj_commit_changes,
 };
 
 pub fn handle_remove(path: &str, recursive: bool) -> Result<()> {
@@ -11,6 +12,8 @@ pub fn handle_remove(path: &str, recursive: bool) -> Result<()> {
 
     let potential_gpg_file_path = get_password_file_path(&store_path, path)?;
     let potential_dir_path = store_path.join(path);
+
+    let original_path_for_message = path.to_string();
 
     let (path_to_remove_fs, is_dir_removal) = if potential_dir_path.is_dir() {
         if !recursive {
@@ -36,6 +39,9 @@ pub fn handle_remove(path: &str, recursive: bool) -> Result<()> {
         std::fs::remove_file(&path_to_remove_fs)?;
         println!("Password '{}' removed.", path);
     }
+
+    let commit_message = format!("Remove entry {}", original_path_for_message);
+    jj_commit_changes(&store_path, &commit_message)?;
 
     Ok(())
 }
