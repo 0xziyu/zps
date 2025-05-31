@@ -1,6 +1,7 @@
 use clap::Parser;
 use cli::{Cli, Commands, OtpCommands, PassCommands};
 use commands::{
+    edit::handle_edit,
     init::handle_init_command,
     list::handle_list,
     otp::{add::handle_otp_add, generate::handle_otp_generate},
@@ -41,8 +42,8 @@ fn main() -> Result<()> {
                 handle_pass_generate(length, no_symbols)?;
             }
         },
-        Commands::Show { path } => {
-            handle_show(&path, cli.key_path)?;
+        Commands::Show { path, show_all } => {
+            handle_show(&path, show_all, cli.key_path)?;
         }
         Commands::List { subfolder } => {
             handle_list(subfolder.as_deref())?;
@@ -58,6 +59,9 @@ fn main() -> Result<()> {
                 handle_otp_generate(&path, cli.key_path)?;
             }
         },
+        Commands::Edit { path } => {
+            handle_edit(&path, cli.key_path)?;
+        }
     }
 
     Ok(())

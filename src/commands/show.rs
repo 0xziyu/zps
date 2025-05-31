@@ -8,7 +8,7 @@ use crate::{
     utils::determine_key,
 };
 
-pub fn handle_show(path: &str, key_path: Option<String>) -> Result<()> {
+pub fn handle_show(path: &str, show_all: bool, key_path: Option<String>) -> Result<()> {
     let home_dir_str = std::env::var("HOME")?;
     let home_dir = PathBuf::from(home_dir_str);
     let (cert, _) = determine_key(&home_dir, key_path)?;
@@ -33,9 +33,12 @@ pub fn handle_show(path: &str, key_path: Option<String>) -> Result<()> {
     let decrypted_data_bytes = decrypt_data(&cert, &encrypted_data)?;
     let decrypted_content = String::from_utf8(decrypted_data_bytes)?;
 
-    let first_line = decrypted_content.lines().next().unwrap_or("").trim_end();
-
-    info!("{}", first_line);
+    if show_all {
+        info!("\n{}", decrypted_content);
+    } else {
+        let first_line = decrypted_content.lines().next().unwrap_or("").trim_end();
+        info!("{}", first_line);
+    }
     std::io::stdout().flush()?;
 
     Ok(())

@@ -1973,6 +1973,7 @@ dependencies = [
  "rand",
  "rpassword",
  "sequoia-openpgp",
+ "tempfile",
  "termtree",
  "totp-rs",
  "tracing",

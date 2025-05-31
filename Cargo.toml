@@ -9,6 +9,7 @@ eyre = "0.6.12"
 rand = "0.9.1"
 rpassword = "7.4.0"
 sequoia-openpgp = { version = "2.0.0" }
+tempfile = "3.20.0"
 termtree = "0.5.1"
 totp-rs = { version = "5.7.0", features = ["otpauth"] }
 tracing = "0.1.41"

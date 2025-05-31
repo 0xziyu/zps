@@ -1,10 +1,12 @@
 use std::{
-    io::Write,
+    io::{Read, Write},
     path::{Path, PathBuf},
+    process::Command,
 };
 
 use eyre::{Result, eyre};
 use sequoia_openpgp::{Cert, serialize::MarshalInto};
+use tempfile::NamedTempFile;
 use tracing::info;
 
 use crate::{
@@ -87,11 +89,11 @@ fn generate_and_save_new_key(default_key_path: &Path, default_key_app_dir: &Path
 
 /// Determines which PGP key to use (user-provided, default, or new), and loads its identity.
 /// Returns the Cert, GpgIdentity, and the PathBuf of the key file used.
-pub fn determine_key(home_dir: &Path, key_path_opt: Option<String>) -> Result<(Cert, PathBuf)> {
+pub fn determine_key(home_dir: &Path, key_path: Option<String>) -> Result<(Cert, PathBuf)> {
     let default_key_app_dir = home_dir.join(CONFIG_DIR_NAME);
     let default_key_path = default_key_app_dir.join(DEFAULT_KEY_FILE_NAME);
 
-    if let Some(kp_str) = key_path_opt {
+    if let Some(kp_str) = key_path {
         handle_user_provided_key(&kp_str)
     } else if default_key_path.exists() {
         info!(
@@ -104,4 +106,36 @@ pub fn determine_key(home_dir: &Path, key_path_opt: Option<String>) -> Result<(C
         let cert = generate_and_save_new_key(&default_key_path, &default_key_app_dir)?;
         Ok((cert, default_key_path))
     }
+}
+
+/// Opens the given initial_content in a text editor determined by the EDITOR
+/// environment variable (or a fallback like "vi").
+/// Returns the modified content as a String.
+pub fn edit_content_in_editor(initial_content: &str) -> Result<String> {
+    let editor = std::env::var("EDITOR").unwrap_or_else(|_| "vi".to_string());
+
+    let mut temp_file = NamedTempFile::new()?;
+
+    temp_file.write_all(initial_content.as_bytes())?;
+    temp_file.flush()?;
+
+    let temp_file_path = temp_file.path().to_path_buf();
+
+    info!("Opening editor '{}' for file: {:?}", editor, temp_file_path);
+
+    let status = Command::new(&editor).arg(&temp_file_path).status()?;
+
+    if !status.success() {
+        return Err(eyre!(
+            "Editor '{}' exited with non-zero status: {:?}",
+            editor,
+            status.code()
+        ));
+    }
+
+    let mut modified_content = String::new();
+    let mut file_to_read = std::fs::File::open(&temp_file_path)?;
+    file_to_read.read_to_string(&mut modified_content)?;
+
+    Ok(modified_content)
 }

@@ -35,6 +35,9 @@ pub enum Commands {
         /// Path to the password entry
         #[clap(value_name = "PATH")]
         path: String,
+        #[clap(long, short = 'a', default_value_t = false)]
+        /// Show entire file
+        show_all: bool,
     },
     /// List passwords
     List {
@@ -51,6 +54,12 @@ pub enum Commands {
         /// Remove recursively (required for folders).
         #[clap(long, short)]
         recursive: bool,
+    },
+    /// Edit an existing password
+    Edit {
+        /// Path to the password entry or folder
+        #[clap(value_name = "PATH")]
+        path: String,
     },
 }
 
